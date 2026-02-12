@@ -65,6 +65,26 @@ class GameController {
         return [];
     }
 
+    public function getGameScoresBySlug($slug) {
+        $model = new Model();
+        $db = $model->getDb();
+        
+        $db->query("SELECT u.username, MAX(s.score) as score, s.timestamp
+            FROM game g
+            JOIN score s ON g.id = s.game_id
+            JOIN user u ON s.user_id = u.id
+            WHERE g.slug = ?
+            GROUP BY u.id
+            ORDER BY score DESC
+        ");
+        
+        $scores = $db->execute([$slug]);
+        
+        return [
+            'scores' => $scores
+        ];
+    }
+
 
     public function getAllGames() { 
         $model = new Model(); 
