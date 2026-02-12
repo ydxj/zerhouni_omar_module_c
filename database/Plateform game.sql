@@ -50,6 +50,7 @@ create table game_score(
     user int,
     game_version int,
     score int,
+    score_timestamp timestamp,
     foreign key(user) references user_plateform(id) on delete cascade,
     foreign key(game_version) references game_version(id) on delete cascade
 );
