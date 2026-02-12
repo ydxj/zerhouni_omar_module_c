@@ -109,8 +109,9 @@ class AuthController{
         return false;
     }
 
-    public function logout(){ 
-        // session_destroy(); 
-    }
+        public function logout(){ 
+            http_response_code(200);
+            return ;
+        }
 
 }
