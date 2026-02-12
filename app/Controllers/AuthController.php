@@ -50,6 +50,9 @@ class AuthController{
         if($result && count($result) > 0) {
             $user = $result[0];
             if($password === $user['password']) {
+                if($user['blocked']) { 
+                    return ['error' => $user['block_reason']];
+                }
                 $db->query('UPDATE user_plateform SET last_login = {now()} WHERE id = :id');
                 $db->execute([':id' => $user['id']]);
                 return $user;

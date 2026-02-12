@@ -14,7 +14,9 @@ create table user_plateform(
 	registred timestamp,
     last_login timestamp,
     game_score int,
-    uploaded_games varchar(255)
+    uploaded_games varchar(255),
+    blocked int default 0,
+    block_reason varchar(255)
 );
 
 create table game(
@@ -23,6 +25,7 @@ create table game(
     optional_thumbnail varchar(255),
     slug varchar(255),
     author int,
+    deleted int default 0,
     foreign key(author) references user_plateform(id)
 );
 
