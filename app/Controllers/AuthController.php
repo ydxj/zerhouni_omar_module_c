@@ -39,15 +39,18 @@ class AuthController{
 
     public function login($username, $password){ 
         if(empty($username) || empty($password)) {
-            return false;
+            http_response_code(401);
+            return ['status' => 'invalid', 'message' => 'Wrong username or password'];
         }
 
         // validators
         if(strlen($username) < 4 || strlen($username) > 60) { 
-            return false; 
+            http_response_code(401);
+            return ['status' => 'invalid', 'message' => 'Wrong username or password'];
         } 
         if(strlen($password) < 8) { 
-            return false; 
+            http_response_code(401);
+            return ['status' => 'invalid', 'message' => 'Wrong username or password'];
         }
         
         $model = new Model(); 
@@ -59,34 +62,51 @@ class AuthController{
             $user = $result[0];
             if($password === $user['password']) {
                 if($user['blocked']) { 
-                    return ['error' => $user['block_reason']];
+                    http_response_code(401);
+                    return ['status' => 'invalid', 'message' => 'Wrong username or password'];
                 }
                 $db->query('UPDATE user_plateform SET last_login = {now()} WHERE id = :id');
                 $db->execute([':id' => $user['id']]);
-                return $user;
+                http_response_code(200);
+                return ['status' => 'success', 'token' => 'xxx'];
             }
         }
         
-        return false;
+        http_response_code(401);
+        return ['status' => 'invalid', 'message' => 'Wrong username or password'];
     }
 
     public function register($username, $password){ 
         if(empty($username) || empty($password)) {
+            http_response_code(400);
             return false;
         }
 
         // validators
         if(strlen($username) < 4 || strlen($username) > 60) {
+            http_response_code(400);
             return false; 
         }
         if(strlen($password) < 8) { 
+            http_response_code(400);
             return false;
         }
         
         $model = new Model(); 
         $db = $model->getDb();
         $db->query("INSERT INTO user_plateform (username, password,registred,last_login) VALUES (:username, :password,{now()},{now()})"); 
-        return $db->execute([':username' => $username, ':password' => $password]);
+        $result = $db->execute([':username' => $username, ':password' => $password]);
+        
+        if($result) {
+            http_response_code(201);
+            return [
+                'status' => 'success',
+                'token' => 'xxx'
+            ];
+        }
+        
+        http_response_code(500);
+        return false;
     }
 
     public function logout(){ 
