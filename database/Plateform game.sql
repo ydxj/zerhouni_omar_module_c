@@ -17,25 +17,29 @@ create table user_plateform(
     uploaded_games varchar(255)
 );
 
-create table game_score(
-	id int primary key auto_increment,
-    user varchar(255),
-    game_version varchar(50),
-    score int
-);
-
 create table game(
 	id int primary key auto_increment,
     description varchar(255),
     optional_thumbnail varchar(255),
     slug varchar(255),
-    author int
+    author int,
+    foreign key(author) references user_plateform(id)
 );
 
 create table game_version(
 	id int primary key auto_increment,
     game int,
     version_timestamp timestamp,
-    path_to_game_files varchar(255)
-    
+    path_to_game_files varchar(255),
+	foreign key(game) references game(id)
+);
+
+
+create table game_score(
+	id int primary key auto_increment,
+    user int,
+    game_version int,
+    score int,
+    foreign key(user) references user_plateform(id),
+    foreign key(game_version) references game_version(id)
 );
