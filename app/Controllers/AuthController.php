@@ -41,6 +41,14 @@ class AuthController{
         if(empty($username) || empty($password)) {
             return false;
         }
+
+        // validators
+        if(strlen($username) < 4 || strlen($username) > 60) { 
+            return false; 
+        } 
+        if(strlen($password) < 8) { 
+            return false; 
+        }
         
         $model = new Model(); 
         $db = $model->getDb();
@@ -66,11 +74,23 @@ class AuthController{
         if(empty($username) || empty($password)) {
             return false;
         }
+
+        // validators
+        if(strlen($username) < 4 || strlen($username) > 60) {
+            return false; 
+        }
+        if(strlen($password) < 8) { 
+            return false;
+        }
         
         $model = new Model(); 
         $db = $model->getDb();
         $db->query("INSERT INTO user_plateform (username, password,registred,last_login) VALUES (:username, :password,{now()},{now()})"); 
         return $db->execute([':username' => $username, ':password' => $password]);
+    }
+
+    public function logout(){ 
+        // session_destroy(); 
     }
 
 }
