@@ -28,9 +28,9 @@ class Database
         $this->stmt = $this->dbh->prepare($sql);
     }
 
-    public function execute()
+    public function execute($params = [])
     {
-        return $this->stmt->execute();
+        return $this->stmt->execute($params);
     }
 
     public function resultSet()

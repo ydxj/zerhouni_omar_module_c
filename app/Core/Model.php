@@ -10,5 +10,10 @@ class Model
         $this->db = new Database();
         $this->db->connect();
     }
+
+    public function getDb()
+    {
+        return $this->db;
+    }
 }
 ?>
