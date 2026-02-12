@@ -32,7 +32,7 @@ create table game(
     slug varchar(255),
     author int,
     deleted int default 0, -- 0 is false, and the 1 is true
-    foreign key(author) references user_plateform(id)
+    foreign key(author) references user_plateform(id) on delete cascade
 );
 
 -- game version 
@@ -41,7 +41,7 @@ create table game_version(
     game int,
     version_timestamp timestamp,
     path_to_game_files varchar(255),
-	foreign key(game) references game(id)
+	foreign key(game) references game(id) on delete cascade
 );
 
 -- game score table
@@ -50,8 +50,8 @@ create table game_score(
     user int,
     game_version int,
     score int,
-    foreign key(user) references user_plateform(id),
-    foreign key(game_version) references game_version(id)
+    foreign key(user) references user_plateform(id) on delete cascade,
+    foreign key(game_version) references game_version(id) on delete cascade
 );
 
 

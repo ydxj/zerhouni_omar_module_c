@@ -41,6 +41,31 @@ class GameController {
         ];
     }
 
+    public function deleteGameBySlug($slug, $authorId) {
+        $model = new Model();
+        $db = $model->getDb();
+        
+        $db->query("SELECT author_id FROM game WHERE slug = ?");
+        $game = $db->execute([$slug]);
+        
+        if (empty($game) || $game[0]['author_id'] != $authorId) {
+            http_response_code(403);
+            return [];
+        }
+
+        $db->query("DELETE FROM game WHERE slug = ?");
+        $response = $db->execute([$slug]);
+        
+        if ($response) {
+            http_response_code(204);
+            return [];
+        }
+        
+        http_response_code(500);
+        return [];
+    }
+
+
     public function getAllGames() { 
         $model = new Model(); 
         $db = $model->getDb(); 
