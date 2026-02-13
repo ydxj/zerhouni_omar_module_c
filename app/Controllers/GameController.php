@@ -6,7 +6,7 @@ class GameController {
         $model = new Model();
         $db = $model->getDb();
         $db->query("SELECT * FROM game WHERE slug = ?");
-        return $db->execute([$slug]);
+        return json_encode($db->execute([$slug]));
     }
 
     public function updateGameBySlug($slug, $title, $description, $authorId) {
@@ -18,27 +18,27 @@ class GameController {
         
         if ($game[0]['author_id'] != $authorId) {
             http_response_code(403);
-            return [
+            return json_encode([
                 'status' => 'forbidden', 
                 'message' => 'You are not the game author'
-            ];
+            ]);
         }
         
         $db->query("UPDATE game SET title = ?, description = ? WHERE slug = ?");
         $responce = $db->execute([$title, $description, $slug]);
         if($responce) {
             http_response_code(200);
-            return [
+            return json_encode([
                 'status' => 'success', 
                 'message' => 'Game updated succesfully'
-            ];
+            ]);
         }
         
         http_response_code(500);
-        return [
+        return json_encode([
             'status' => 'error', 
             'message' => 'An error occurred while updating the game'
-        ];
+        ]);
     }
 
     public function deleteGameBySlug($slug, $authorId) {
@@ -50,7 +50,7 @@ class GameController {
         
         if (empty($game) || $game[0]['author_id'] != $authorId) {
             http_response_code(403);
-            return [];
+            return json_encode([]);
         }
 
         $db->query("DELETE FROM game WHERE slug = ?");
@@ -58,11 +58,11 @@ class GameController {
         
         if ($response) {
             http_response_code(204);
-            return [];
+            return json_encode([]);
         }
         
         http_response_code(500);
-        return [];
+        return json_encode([]);
     }
 
     public function getGameScoresBySlug($slug) {
@@ -80,9 +80,9 @@ class GameController {
         
         $scores = $db->execute([$slug]);
         
-        return [
+        return json_encode([
             'scores' => $scores
-        ];
+        ]);
     }
 
 
@@ -90,7 +90,7 @@ class GameController {
         $model = new Model(); 
         $db = $model->getDb(); 
         $db->query("SELECT * FROM game"); 
-        return $db->resultSet(); 
+        return json_encode($db->resultSet()); 
     }
 } 
 

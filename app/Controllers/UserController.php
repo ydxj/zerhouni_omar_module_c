@@ -11,7 +11,10 @@ class UserController {
         
         if (empty($user)) {
             http_response_code(404);
-            return ;
+            return json_encode([
+                'status' => 'error', 
+                'message' => 'User not found'
+            ]);
         }
         
         $userData = $user[0];
@@ -52,14 +55,12 @@ class UserController {
         }
         
         http_response_code(200);
-        return [
+        return json_encode([
             'username' => $userData['username'],
             'registeredTimestamp' => $userData['registered_timestamp'],
             'authoredGames' => $authoredGames,
             'highscores' => $highscores
-        ];
+        ]);
     }
 
 }
-
-?>
